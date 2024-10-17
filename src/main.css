@@ -1,0 +1,16 @@
+@import-normalize;
+
+.v-btn {
+  text-transform: none;
+}
+
+body {
+  /* background: var(--v-dark-background); */
+  color: white;
+}
+
+html, body {
+  height: 100%;
+}
+/* main.css */
+
