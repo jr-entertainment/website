@@ -1,56 +1,77 @@
 <template>
   <v-app>
-    <AppBar ref="appBar" />
+    <div
+      class="background-image"
+      :style="`background-image: url(${currentBackground}); min-height: ${contentHeight};`"
+    >
+      <AppBar ref="appBar" />
 
-    <v-main>
-      <v-container fluid class="pa-0">
-        <router-view v-slot="{ Component }">
-          <transition name="fade" mode="out-in">
-            <component :is="Component" />
-          </transition>
-        </router-view>
-      </v-container>
-    </v-main>
+      <v-main>
+        <v-container fluid class="pa-0">
+          <router-view v-slot="{ Component }">
+            <transition name="fade" mode="out-in">
+              <component :is="Component" />
+            </transition>
+          </router-view>
+        </v-container>
+      </v-main>
 
-    <AppFooter ref="appFooter" />
+      <AppFooter ref="appFooter" />
+    </div>
   </v-app>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 export default {
   data() {
     return {
-      contentHeight: '0px'
+      contentHeight: '0px',
+      isMobile: false,
     };
+  },
+  computed: {
+    currentBackground() {
+      return this.isMobile 
+        ? 'assets/cover-without-text.png'
+        : 'assets/cover-with-text.png'
+    },
   },
   mounted() {
     this.calculateHeight();
-    window.addEventListener('resize', this.calculateHeight);
+    this.checkIfMobile();
+    window.addEventListener('resize', this.handleResize);
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.calculateHeight);
+    window.removeEventListener('resize', this.handleResize);
   },
   methods: {
-    calculateHeight () {
+    calculateHeight() {
       const appBarHeight = this.$refs.appBar.$el.offsetHeight;
       const appFooterHeight = this.$refs.appFooter.$el.offsetHeight;
-      this.contentHeight = `calc(100vh - ${appBarHeight + appFooterHeight}px)`;
-    }
-  }
-}
+      const viewportHeight = window.innerHeight;
+
+      this.contentHeight = `calc(${viewportHeight}px - ${appBarHeight + appFooterHeight}px)`;
+    },
+    checkIfMobile() {
+      this.isMobile = window.innerWidth < 1110; // Switch at 1110px
+    },
+    handleResize() {
+      this.calculateHeight();
+      this.checkIfMobile(); // Update mobile state on resize
+    },
+  },
+};
 </script>
 
 <style>
-.main-content {
-  scroll-margin-top: -63px;
+.background-image {
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.5s ease-in-out; /* Smooth transition */
+  min-height: 100vh; /* Ensures the div takes up full height */
 }
 
-section[id] {
-  scroll-margin-top: 63px; /* Adjust this value according to your app-bar height */
-}
-
+/* Fade transition for other components */
 .fade-enter-active,
 .fade-leave-active {
   transition-duration: 0.15s;
@@ -60,8 +81,6 @@ section[id] {
 
 .fade-enter,
 .fade-leave-active {
-  opacity: 0
+  opacity: 0;
 }
-
 </style>
-

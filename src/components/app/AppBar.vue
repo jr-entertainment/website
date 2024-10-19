@@ -1,30 +1,15 @@
 <template>
-  <v-app-bar elevation="0" color="background">
-    <!-- Logo and title -->
-    <template #title>
-      <div
-        @click="goHome"
-        class="d-inline-flex align-center my-5 clickable"
-        :class="[$vuetify.display.smAndDown ? 'text-h6' : 'text-h4', 'text-primary']"
-      >
-        <!-- <v-img
-          src="/assets/logo.png"
-          :width="$vuetify.display.smAndDown ? '40px' : '60px'"
-          class="mr-3"
-        /> -->
-        Jack Rise Entertainment
-      </div>
-    </template>
-
+  <v-app-bar elevation="0" color="transparent" class="pa-12" density="prominent">
     <!-- Desktop menu -->
     <template v-if="$vuetify.display.mdAndUp" #append>
-      <div>
+      <div style="overflow: visible; padding: 50px;">
         <v-btn
           v-for="item in menu"
           :key="item"
-          class="text-body-1 blue-grey-darken-4"
-          @click="scrollToSection(item.toLowerCase())"
-          variant="text"
+          @click="scrollToSection(item.toUpperCase())"
+          variant="outlined"
+          width="200px"
+          class="glow-button "
         >
           {{ item }}
         </v-btn>
@@ -71,6 +56,7 @@ import { useRouter } from 'vue-router'
 
 const drawer = ref(false)
 const menu = [
+  'CONTACT US'
 ]
 
 const router = useRouter()
@@ -91,6 +77,23 @@ function goHome () {
 <style scoped>
 .clickable {
   cursor: pointer;
+}
+
+/* Glow effect for buttons */
+.glow-button {
+  color: white; /* Change to your desired text color */
+  text-shadow: 
+    0 0 10px rgba(255, 105, 180, 0.7),  /* Hot pink glow */
+    0 0 20px rgba(255, 105, 180, 0.7),
+    0 0 30px rgba(255, 105, 180, 0.7),
+    0 0 40px rgba(255, 105, 180, 0.7),
+    0 0 50px rgba(255, 105, 180, 0.7); /* Text glow effect */
+  box-shadow: 
+    0 0 10px rgba(255, 105, 180, 0.6),   /* Inner glow */
+    0 0 20px rgba(255, 105, 180, 0.5),   /* Middle glow */
+    0 0 30px rgba(255, 105, 180, 0.4),
+    0 0 40px rgba(255, 105, 180, 0.3),
+    0 0 50px rgba(255, 105, 180, 0.2); 
 }
 
 </style>
